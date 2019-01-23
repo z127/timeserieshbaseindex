@@ -3,11 +3,12 @@ package segmenttree;
 import Item.HbaseIndexItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class IntervalTreeConstructor2 {
     public static final double SENTINEL = -100000;
 
-    public static Node[] transformToNode(ArrayList<HbaseIndexItem> list) {
+    public static Node[] transformToNode(List<HbaseIndexItem> list) {
         Node[] arrNode=new Node[list.size()];
         for(int i=0;i<list.size();i++)
         {

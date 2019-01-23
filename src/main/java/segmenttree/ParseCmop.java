@@ -49,7 +49,7 @@ public class ParseCmop {
                 return  arrTemperature;
     }
 
-    private static String ParseDate(String timestamp) {
+    public static String ParseDate(String timestamp) {
        String[]  arrtime=timestamp.split(" ");
         String[] date=arrtime[0].split("/");
         String[] time=arrtime[1].split(":");

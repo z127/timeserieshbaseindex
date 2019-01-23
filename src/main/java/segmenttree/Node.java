@@ -24,7 +24,7 @@ public class Node {
         this.rightpoint = rightpoint;
         this.content = content;
         this.max = max;
-        this.content=new ArrayList<>();
+        this.content=new ArrayList<Node>();
     }
 
 

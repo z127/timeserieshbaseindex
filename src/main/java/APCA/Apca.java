@@ -189,7 +189,7 @@ public class Apca implements GenericTransformer<double[], NewMeanLastPair[]> {
      * @return
      */
     private TreeSet<ApcaSegment> createSegmentsSet(double[] values, ApcaSegment first) {
-        TreeSet<ApcaSegment> map = new TreeSet<>(new Comparator<ApcaSegment>() {
+        TreeSet<ApcaSegment> map = new TreeSet<ApcaSegment>(new Comparator<ApcaSegment>() {
             @Override
             public int compare(ApcaSegment s1, ApcaSegment s2) {
                 return Precision.compareTo(s1.errorWithNext, s2.errorWithNext, TimeSeriesPrecision.EPSILON);
@@ -252,8 +252,8 @@ public class Apca implements GenericTransformer<double[], NewMeanLastPair[]> {
     }
 
     public ArrayList<ArrayList<Double>> ComputeMaxandMin(double[] value,ApcaSegment segmentItem) {
-        ArrayList<ArrayList<Double>> listMaxandMin=new ArrayList<>();
-        ArrayList<Double> listMax=new ArrayList<>();
+        ArrayList<ArrayList<Double>> listMaxandMin=new ArrayList<ArrayList<Double>>();
+        ArrayList<Double> listMax=new ArrayList<Double>();
         ArrayList<Double> listMin=new ArrayList<>();
         int start=0;
         int end=0;

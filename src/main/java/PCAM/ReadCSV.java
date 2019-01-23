@@ -16,13 +16,15 @@ public class ReadCSV {
         }
         String line = "";
         String everyLine = "";
+        int i=0;
         ArrayList<String> allString = new ArrayList<>();
         try {
             while ((line = br.readLine()) != null) // 读取到的内容给line变量
             {
                 everyLine = line;
               //  System.out.println(everyLine);
-                allString.add(everyLine);
+                 allString.add(everyLine);
+                i++;
             }
             System.out.println("csv表格中所有行数：" + allString.size());
         } catch (IOException e) {
@@ -33,9 +35,18 @@ public class ReadCSV {
     }
 
 
-    public static void writeCsv(String filepath,ArrayList<String> m) {
+
+    public static void writeCsv(String filepath,ArrayList<String> m) throws IOException {
         File csv = new File(filepath); // CSV文件路径
         csv.setReadable(true);//设置可读
+        csv.setWritable(true);
+        if(!csv.exists())
+        {
+            System.out.println("不存在创建文件");
+            csv.createNewFile();
+        }else {
+            System.out.println("文件存在");
+        }
         BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csv,true)));
@@ -47,9 +58,9 @@ public class ReadCSV {
         try {
             for(int i=0;i<m.size();i++)
             {
-                line=m.get(i).substring(1,m.get(i).length());
-                System.out.println("newLine"+line);
-                bw.write(line);
+                line=m.get(i);
+               // System.out.println("newLine"+line);
+                bw.write(line+"\n");
             }
            bw.close();
         } catch (IOException e) {

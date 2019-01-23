@@ -1,6 +1,6 @@
 package segmenttree;
 
-class NumberException extends Exception
+public class NumberException extends Exception
 {
     double left;
     double right;
