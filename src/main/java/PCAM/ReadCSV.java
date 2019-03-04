@@ -222,18 +222,20 @@ public class ReadCSV {
     /**
      * Segment
      * @param mean
-     * @param variance
+     * @param Errorrate
      * @param count
      * @return
      */
-    public static TreeMap<Double,Double> splitStandardDiviationPointSegment(double mean,double variance,int count) {
+    public static TreeMap<Double,Double> splitStandardDiviationPointSegment(double mean,double variance,double Errorrate,int count) {
+
         TreeMap<Double,Double> sortedMap=new TreeMap<Double, Double>( );
-        System.out.println("mean "+ mean+" variance "+variance);
+       // System.out.println("mean "+ mean+" Errorrate "+Errorrate+" variance "+ variance);
+        //总的差距超不过 mean+3variance
         double m=6.0/count;
         for(int i=0;i<count;i++)
         {
            double  parameter=variance*(i-count/2)*m;
-           sortedMap.put(mean+parameter,caseTolerance(i,count/2 ,variance));
+           sortedMap.put(mean+parameter,caseTolerance(i,count/2 ,Errorrate));
         }
        Set<Double> set=sortedMap.keySet();
        /* int i=0;
@@ -249,17 +251,17 @@ public class ReadCSV {
      * 获取误差
      * @param i
      * @param count
-     * @param variance
+     * @param Errorrate
      * @return
      */
-    private static Double caseTolerance(double i,double count,double variance) {
+    private static Double caseTolerance(double i,double count,double Errorrate) {
        if(Math.abs(i-count)>=1)
        {
          double m=  (Math.abs(i-count)+1);
           // System.out.println(" i "+ i + " count "+ count+"  i - count "+Math.abs(i-count));
-           return  variance/m;
+           return  Errorrate/m;
        }else {
-           return  variance;
+           return  Errorrate;
        }
     }
 
@@ -291,5 +293,107 @@ public class ReadCSV {
         return  null;
     }
 
+
+    public static TreeMap split2StandardDiviationPointSegment(double mean, double variance, double errorrate, int countLevel, double[] values) {
+        double[] errorValue=new double[countLevel];
+        double minValue=Double.MAX_VALUE;
+        double maxValue=Double.MIN_VALUE;
+        for(double i=0;i<countLevel;i++)
+        {
+            errorValue[(int)i]=Math.min(errorrate*(1-i/countLevel),errorrate*0.2);
+        }
+       double    standVariance=computeStandardDiviation(values);
+        double total=0;
+        for(int i=0;i<values.length;i++)
+        {
+            minValue=Math.min(minValue,values[i]);
+            maxValue=Math.max(maxValue,values[i]);
+            total+=values[i];
+        }
+        System.out.println("minValue "+minValue+" MaxValue "+maxValue);
+        System.out.println("均值 "+mean);
+        /**
+         * 最大值，最小值抽取
+         */
+        double[] splitLevel=new double[countLevel];
+        double chaZhi=(maxValue-minValue)/ countLevel;
+        System.out.println("chazhi"+chaZhi);
+        TreeMap<Double,Integer> map=new TreeMap<>();
+        double lastValue=0;
+        for(int i=0;i< countLevel;i++)
+        {
+            if(i==0)
+            {   lastValue=minValue;
+                map.put(minValue,0);}
+            else
+            {
+                lastValue=lastValue+chaZhi;
+               map.put(lastValue,0);
+            }
+        }
+        for(int i=0;i<values.length;i++)
+        {
+            Object[]  arr= map.keySet().toArray();
+            int lastIndex=0;
+            for(int j=0;j<arr.length;j++)
+            {
+                if(values[i]>=(double)arr[arr.length-1])
+                {
+                    map.put((double)arr[arr.length-1],map.get(arr[arr.length-1])+1);
+                    break;
+                }
+                if(values[i]<(double)arr[j])
+                {
+                   map.put((double)arr[j-1],map.get(arr[j-1])+1);
+                   break;
+                }else if(values[i]==(double)arr[j]){
+                    map.put((double)arr[j],map.get(arr[j])+1);
+                    break;
+                }
+            }
+        }
+        System.out.println(map.toString());
+        return  map;
+    }
+
+    public static   boolean kurtosis(double[] values,int start, int end)
+    {
+        double variance=0;
+        double mean=computeMean(values,start,end);
+        double fourPower=0;
+        if(start>end-100)
+        {
+            return  false;
+        }
+      for(int i=start;i<end;i++)
+      {
+         fourPower += Math.pow((values[i] - mean), 4);
+          variance += Math.pow((values[i] - mean), 2);
+      }
+      double result=(end-start) * fourPower / Math.pow(variance, 2);
+        System.out.println("kurtosis : "+result);
+        if(result>3)
+        {  System.out.println("3");
+            return true;
+        }
+        return
+                false;
+    }
+
+    /**
+     * end
+     * @param values
+     * @param start
+     * @param end
+     * @return
+     */
+    public static double  computeMean(double[] values,int start, int end) {
+        double total=0;
+        for(int i=start;i<end;i++)
+        {
+            total+=values[i];
+        }
+        return  total/(end-start);
+    }
 
 }

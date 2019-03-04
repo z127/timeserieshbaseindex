@@ -7,13 +7,14 @@ import java.util.List;
 
 public class IntervalTreeConstructor2 {
     public static final double SENTINEL = -100000;
-
+    public  static  int numCount=0;
     public static Node[] transformToNode(List<HbaseIndexItem> list) {
         Node[] arrNode=new Node[list.size()];
         for(int i=0;i<list.size();i++)
         {
             HbaseIndexItem item=list.get(i);
             arrNode[i]=new Node(item.getMin(),item.getMax(),item);
+            System.out.println(arrNode[i].getHbaseIndexitem().toString());
         }
 
         return  arrNode;
@@ -86,9 +87,11 @@ public class IntervalTreeConstructor2 {
         z.parent = new Node(SENTINEL);
         z.childLeft = new Node(SENTINEL);
         z.childRight = new Node(SENTINEL);
-
+        //复制item
+        z.HbaseIndexitem=newNode.HbaseIndexitem;
         Node y = new Node(SENTINEL);        //y is the parent of x
         Node x = T.root;
+        //判断左端点是否为空，为空代表当前树是空结点
         while (x.leftpoint != SENTINEL) {
             x.max = Math.max(x.max, z.max);     //Maintaining the max value of each node from z up to root
             y = x;
@@ -125,6 +128,20 @@ public class IntervalTreeConstructor2 {
             else
                 System.out.println("    Black      "+ x.max);
             IntervalT_InorderWalk(x.childRight);
+        }
+    }
+
+    public static void IntervalT_InorderWalk2(Node x)
+    {
+        if(x.leftpoint!=SENTINEL)
+        {
+            IntervalT_InorderWalk2(x.childLeft);
+            System.out.print("[   "+x.leftpoint+"   "+x.rightpoint+"   ]");
+            if(x.color== IntervalTreeConstructor.Color.Red)
+                System.out.println("     Red       "+ x.max);
+            else
+                System.out.println("    Black      "+ x.max);
+            IntervalT_InorderWalk2(x.childRight);
         }
     }
 
@@ -222,11 +239,61 @@ public class IntervalTreeConstructor2 {
        {
             RecursiveIntervalSearch(T.getChildLeft(),left,right,listOverlap);
        }
-        if(T.getChildRight().getLeftpoint()!=SENTINEL&& !(left>T.getChildRight().getMax()) )
+        if(T.getChildRight().getLeftpoint()!=SENTINEL&&  T.getChildRight().getMax()>=left )
         {
             RecursiveIntervalSearch(T.getChildRight(),left,right,listOverlap);
         }
 
+    }
+
+
+    public static void  RecursiveMaxSearch(Node T,double max,ArrayList<Node> listOverlap) throws NumberException {
+        if(T.getLeftpoint()!=SENTINEL &&OverlapMax(T,max))
+        {
+            listOverlap.add(T);
+        }
+        if(T.getChildLeft().getLeftpoint()!=SENTINEL&& T.getChildLeft().getMax()>=max)
+        {
+            RecursiveMaxSearch(T.getChildLeft(),max,listOverlap);
+        }
+        if(T.getChildRight().getLeftpoint()!=SENTINEL&& !(max>T.getChildRight().getMax()) )
+        {
+            RecursiveMaxSearch(T.getChildRight(),max,listOverlap);
+        }
+    }
+
+
+    public static void  recursiveMinSearch(Node T,double min,ArrayList<Node> listOverlap) throws NumberException {
+        if(T.getLeftpoint()!=SENTINEL &&OverlapMin(T,min))
+        {
+            listOverlap.add(T);
+        }
+        if(T.getChildLeft().getLeftpoint()!=SENTINEL&& T.getChildLeft().getMin()>=min)
+        {
+            recursiveMinSearch(T.getChildLeft(),min,listOverlap);
+        }
+        if(T.getChildRight().getLeftpoint()!=SENTINEL&& T.getChildRight().getMin()>=min )
+        {
+            recursiveMinSearch(T.getChildRight(),min,listOverlap);
+        }
+    }
+
+    private static boolean OverlapMin(Node t, double min) {
+        if(min>=t.leftpoint)
+        {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private static boolean OverlapMax(Node t, double max) {
+        if(max<t.rightpoint)
+        {
+            return true;
+        }else {
+            return false;
+        }
     }
 
 }

@@ -18,7 +18,7 @@ public class ParseTemperature {
         //计算均值，标准差，最小值，最大值
         double[] statistics=ReadCSV.computeStatistics(v1);
         //划分范围，最大值，最小值
-        ArrayList<HbaseIndexItem> list=new Pcam().computeHbaseSegmentAccordingSegment(v1,statistics[0],statistics[1],1);
+        ArrayList<HbaseIndexItem> list=new Pcam().computeHbaseSegmentAccordingSegment(v1,statistics[0],statistics[1],statistics[1],1);
         for(HbaseIndexItem item:list)
         {
             System.out.println(item.toString());

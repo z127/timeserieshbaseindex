@@ -15,6 +15,24 @@ public class Node {
     ArrayList<Node> content;
     double max;               //附加信息，记录以该节点为根的子树中所有区间端点的最大值
 
+    double min;
+
+    public double getMin() {
+        return min;
+    }
+
+    public void setMin(double min) {
+        this.min = min;
+    }
+
+    public HbaseIndexItem getHbaseIndexitem() {
+        return HbaseIndexitem;
+    }
+
+    public void setHbaseIndexitem(HbaseIndexItem hbaseIndexitem) {
+        HbaseIndexitem = hbaseIndexitem;
+    }
+
     public Node(IntervalTreeConstructor.Color color, Node parent, Node childLeft, Node childRight, double leftpoint, double rightpoint, ArrayList<Node> content, double max) {
         this.color = color;
         this.parent = parent;

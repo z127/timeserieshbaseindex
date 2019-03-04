@@ -14,6 +14,11 @@ public class HbaseIndexItem {
     int length;
     double tolerance;
 
+    public HbaseIndexItem(double min, double max) {
+        this.min = min;
+        this.max = max;
+    }
+
     @Override
     public String toString() {
         return "HbaseIndexItem{" +
@@ -30,6 +35,16 @@ public class HbaseIndexItem {
                 '}';
     }
 
+
+    public String tomyString() {
+        return "HbaseIndexItem{" +
+                "start=" + start +
+                ", end=" + end +
+                ", min=" + min +
+                ", max=" + max +
+                ", length="+ length +
+                '}';
+    }
     public int getLength() {
         return length;
     }
@@ -99,18 +114,25 @@ public class HbaseIndexItem {
 
     }
 
-    public HbaseIndexItem(int start, int end) {
+
+
+
+    public HbaseIndexItem(int id, int start, int end, double max,  double min,int length) {
+        this.id = id;
         this.start = start;
         this.end = end;
+        this.min = min;
+        this.max = max;
+        this.length = length;
     }
 
-    public HbaseIndexItem(int start, int end,double max,double min) {
+    public HbaseIndexItem(int start, int end, double max, double min,int length) {
         this.start = start;
         this.end = end;
         this.max=max;
         this.min=min;
+        this.length=length;
     }
-
 
 
 

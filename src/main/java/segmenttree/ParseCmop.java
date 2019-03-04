@@ -16,8 +16,7 @@ public class ParseCmop {
         //计算均值，标准差，最小值，最大值
         double[] statistics= ReadCSV.computeStatistics(arrTemperature);
         //划分范围，最大值，最小值
-        ArrayList<HbaseIndexItem> list=new Pcam().computeHbaseSegmentAccordingSegment(arrTemperature,statistics[0],statistics[1],3);
-
+        ArrayList<HbaseIndexItem> list=new Pcam().computeHbaseSegmentAccordingSegment(arrTemperature,statistics[0],statistics[1],statistics[1],3);
 
         for(HbaseIndexItem item:list)
         {

@@ -3,6 +3,7 @@ package segmenttree;
 import Item.HbaseIndexItem;
 import PCAM.Pcam;
 import PCAM.ReadCSV;
+import benchmark.ErrorRate;
 import segmenttree.IntervalTree;
 import segmenttree.IntervalTreeConstructor;
 import segmenttree.IntervalTreeConstructor2;
@@ -26,7 +27,7 @@ public class TesIntervalTree {
         //计算均值，标准差，最小值，最大值
         double[] statistics= ReadCSV.computeStatistics(v1);
         //划分范围，最大值，最小值
-        ArrayList<HbaseIndexItem> listTem=new Pcam().computeHbaseSegmentAccordingSegment(v1,statistics[0],statistics[1],3);
+        ArrayList<HbaseIndexItem> listTem=new Pcam().computeHbaseSegmentAccordingSegment(v1,statistics[0],statistics[1],statistics[1],3);
         for(HbaseIndexItem item:listTem)
         {
             System.out.println(item.toString());
@@ -47,19 +48,20 @@ public class TesIntervalTree {
             IntervalTreeConstructor2.IntervalT_Insert(T, A[i]);
 
         System.out.println("The interval tree is:");
-       // IntervalTreeConstructor2.IntervalT_InorderWalk(T.getRoot());
+        IntervalTreeConstructor2.IntervalT_InorderWalk(T.getRoot());
         System.out.println("The root of the tree is: " + T.getRoot().getLeftpoint() + "   " + T.getRoot().getRightpoint());
         System.out.println("left child" + T.getRoot().getChildLeft().getLeftpoint() + " " + T.getRoot().getChildLeft().getRightpoint()+" max "+T.getRoot().getChildLeft().getMax());
         System.out.println("left child" + T.getRoot().getChildRight().getLeftpoint() + " " + T.getRoot().getChildRight().getRightpoint()+" max "+T.getRoot().getChildRight().getMax());
         System.out.println("left child" + T.getRoot().getChildRight().getChildLeft().getLeftpoint() + " " + T.getRoot().getChildRight().getChildLeft().getRightpoint()+"  max "+T.getRoot().getChildRight().getChildLeft().getMax());
         System.out.println("/*-------------------------------------------------------------*/");
         System.out.println("/*--------------------Searching Interval Tree------------------*/");
-        double leftpoint =  9.5;
-        double rightpoint =  10;
+        double leftpoint =  8.5;
+        double rightpoint =  8.5;
         //34.995, min=34.687
         ArrayList<Node> nodeList=new ArrayList<Node>();
         Node rootNode=T.getRoot();
       IntervalTreeConstructor2.RecursiveIntervalSearch(rootNode, leftpoint, rightpoint,nodeList);
+      //  ErrorRate.computeNodeErrorRate(nodeList);
         if (nodeList.size() > 0) {
             System.out.println("查询出区间有 " +nodeList.size()+" 个");
            /* for (int i = 0; i < nodeList.size(); i++) {
@@ -70,8 +72,6 @@ public class TesIntervalTree {
                 System.out.println("max " + node.getMax());
                 System.out.println("node " + node.getContent().size());
             }*/
-
-
     }else
 
     {
