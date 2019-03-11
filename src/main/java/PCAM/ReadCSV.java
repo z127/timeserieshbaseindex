@@ -34,7 +34,75 @@ public class ReadCSV {
 
     }
 
+    public static ArrayList<String> readSatteliteCsv(String filepath) {
+        File csv = new File(filepath); // CSV文件路径
+        csv.setReadable(true);//设置可读
+        csv.setWritable(true);//设置可写
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(csv));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line = "";
+        String everyLine = "";
+        int i=0;
+        ArrayList<String> allString = new ArrayList<>();
+        String arr[];
+        try {
+            while ((line = br.readLine()) != null) // 读取到的内容给line变量
+            {
+                everyLine = line;
+               //  System.out.println(everyLine);
+               arr=everyLine.split(",");
+               // System.out.println(arr.toString());
+              //  System.out.println(arr[0]);
+                int m=34;
+                if(!arr[m].equals("0.000000"))
+                {
+                    allString.add(arr[m]);
+                }else {
+                    System.out.println("等于0"+arr[m]);
+                }
+                i++;
+            }
+            System.out.println("csv表格中所有行数：" + allString.size());
+           //writeCsv("D:\\DataProject\\DataGenerate\\weixing\\3000weixing.csv", allString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return allString;
 
+    }
+
+    public static ArrayList<String> computeLine(String filepath) {
+        File csv = new File(filepath); // CSV文件路径
+        csv.setReadable(true);//设置可读
+        csv.setWritable(true);//设置可写
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(csv));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line = "";
+        String everyLine = "";
+        int i=0;
+        ArrayList<String> allString = new ArrayList<>();
+        String arr[];
+        try {
+            while ((line = br.readLine()) != null) // 读取到的内容给line变量
+            {
+                i++;
+
+            }
+            System.out.println("计算行数,csv表格中所有行数：" + i);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return allString;
+
+    }
 
     public static void writeCsv(String filepath,ArrayList<String> m) throws IOException {
         File csv = new File(filepath); // CSV文件路径
@@ -141,6 +209,10 @@ public class ReadCSV {
         {
             minValue=Math.min(minValue,values[i]);
             maxValue=Math.max(maxValue,values[i]);
+            /*if(values[i]>1000)
+            {
+                System.out.println("序号是"+i+" "+values[i]);
+            }*/
             totalNum+=values[i];
         }
         double meanValue=totalNum/values.length;

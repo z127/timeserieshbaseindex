@@ -16,10 +16,10 @@ public class Test {
         {
             v1[i]=Double.parseDouble(arrTemperature.get(i));
         }
-        ArrayList<HbaseIndexItem> list= SegmentUtils.computeOriginalSegment(v1,      312853);
+        ArrayList<HbaseIndexItem> list= SegmentUtils.computeOriginalSegment(v1,      181512);
         for(int i=0;i<list.size();i++)
         {System.out.println(list.get(i).toString());}
-      ArrayList<HbaseIndexItem>  listResult=ErrorRate.computeTraditionalErrorRate( 4.1835,  5.40625,list,arrTemperature.size());
+      ArrayList<HbaseIndexItem>  listResult=ErrorRate.computeTraditionalErrorRate( 1.4434,  4.8907,list,arrTemperature.size());
         HbaseQuery.queryDataScanList("cmop2000",listResult);
     }
 }

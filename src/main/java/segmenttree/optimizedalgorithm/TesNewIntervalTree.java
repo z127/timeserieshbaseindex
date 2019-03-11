@@ -15,7 +15,7 @@ public class TesNewIntervalTree {
     public static void main(String[] args) throws NumberException {
        // List<String> rawCompList= ParseDirFile("D:\\DataWater");
        // ArrayList<String> rawCompList= ParseCmop.readCmopCsv("D:\\DataWater\\saturn01.0.F.CT_2008_12_PD0.csv");
-        ArrayList<String> arrTemperature=ReadCSV.readCsv("D:\\DataProject\\DataGenerate\\3000Wtemperature.csv");
+        ArrayList<String> arrTemperature=ReadCSV.readCsv("D:\\DataProject\\DataGenerate\\stock\\600wStock.csv");
         double[] v1=new double[arrTemperature.size()];
         for(int i=0;i<arrTemperature.size();i++)
         {
@@ -24,7 +24,7 @@ public class TesNewIntervalTree {
         //计算均值，标准差，最小值，最大值
         double[] statistics= ReadCSV.computeStatistics(v1);
         //划分范围，最大值，最小值
-        ArrayList<HbaseIndexItem> listTem=new Pcam().computeHbaseSegmentAccordingSegment(v1,statistics[0],statistics[1],0.9999999999999999,4);
+        ArrayList<HbaseIndexItem> listTem=new Pcam().computeHbaseSegmentAccordingSegment(v1,statistics[0],statistics[1],20,4);
        /*for(HbaseIndexItem item:listTem)
         {
             System.out.println(item.toString());
@@ -46,13 +46,12 @@ public class TesNewIntervalTree {
         NewIntervalTree T = new NewIntervalTree();
         T.setRoot(new NewNode(IntervalTreeConstructorNew.SENTINEL));
 
-        double leftpoint =  4.1835;
-        double rightpoint =  5.40625;
+        double leftpoint = 400;
+        double rightpoint = 500;
         int mingzhongcount=0;
         for (int i = 0; i < len; i++) {
             if(overlap(A1[i],leftpoint,rightpoint))
             {
-
                // System.out.println("overlap"+A1[i].getMin()+" "+A1[i].getMax());
                 mingzhongcount++;
             }
@@ -60,7 +59,6 @@ public class TesNewIntervalTree {
         }
         System.out.println("The interval tree is:");
         IntervalTreeConstructorNew.IntervalT_InorderWalk(T.getRoot());
-
         //System.out.println("遍历出来的count"+IntervalTreeConstructorNew.bianliCount);
       //  System.out.println("The root of the tree is: " + T.getRoot().getLeftpoint() + "   " + T.getRoot().getRightpoint());
      //   System.out.println("left child" + T.getRoot().getChildLeft().getLeftpoint() + " " + T.getRoot().getChildLeft().getRightpoint()+" max "+T.getRoot().getChildLeft().getMax());

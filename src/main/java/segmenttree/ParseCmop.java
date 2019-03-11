@@ -12,24 +12,22 @@ public class ParseCmop {
     public  static boolean printLog=false;
     public static void main(String[] args) {
         ArrayList<String> rawCompList= readCmopCsv("D:\\DataWater\\saturn01.0.F.CT_2008_12_PD0.csv");
-        double[] arrTemperature=parseRawCompList(rawCompList,printLog);
+        double[] arrTemperature=parseRawCompListTemperature(rawCompList,printLog);
         //计算均值，标准差，最小值，最大值
         double[] statistics= ReadCSV.computeStatistics(arrTemperature);
         //划分范围，最大值，最小值
         ArrayList<HbaseIndexItem> list=new Pcam().computeHbaseSegmentAccordingSegment(arrTemperature,statistics[0],statistics[1],statistics[1],3);
-
         for(HbaseIndexItem item:list)
         {
             System.out.println(item.toString());
         }
-
         System.out.println(" mean "+statistics[0]);
         System.out.println(" standard Deviation "+statistics[1]);
         System.out.println("HbaseItem Size "+ list.size());
         System.out.println("raw data size"+rawCompList.size());
     }
 
-    public static double[] parseRawCompList(List<String> list,boolean printLog) {
+    public static double[] parseRawCompListTemperature(List<String> list,boolean printLog) {
                 double[] arrTemperature=new double[list.size()];
                 for(int i=0;i<list.size();i++)
                 {
@@ -42,11 +40,34 @@ public class ParseCmop {
                     System.out.println("water_salinity "+arritem[1]);
                     System.out.println("water_electrical_conductivity "+arritem[2]);
                     System.out.println("water_temperature "+arritem[3]);}
-                    arrTemperature[i]=Double.parseDouble(arritem[1]);
+                    arrTemperature[i]=Double.parseDouble(arritem[3]);
                 }
 
                 return  arrTemperature;
     }
+
+
+    public static ArrayList<String> parseRawCompListSalinity(List<String> list,boolean printLog) {
+        double[] Salinity=new double[list.size()];
+        ArrayList<String> listSalinity=new ArrayList();
+        for(int i=0;i<list.size();i++)
+        {
+            String item=list.get(i);
+            String[] arritem=item.split(",");
+            String date=ParseDate(arritem[0]);
+            if(printLog==true)
+            {System.out.println(" time "+arritem[0]);
+                System.out.println(" transformed time "+date);
+                System.out.println("water_salinity "+arritem[1]);
+                System.out.println("water_electrical_conductivity "+arritem[2]);
+                System.out.println("water_temperature "+arritem[3]);}
+            Salinity[i]=Double.parseDouble(arritem[1]);
+            listSalinity.add(Salinity[i]+"");
+        }
+
+        return  listSalinity;
+    }
+
 
     public static String ParseDate(String timestamp) {
        String[]  arrtime=timestamp.split(" ");

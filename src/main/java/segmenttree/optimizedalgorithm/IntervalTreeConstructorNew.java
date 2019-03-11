@@ -130,6 +130,7 @@ public class IntervalTreeConstructorNew {
     private static ArrayList<HbaseIndexItem> overlapLeftAndRight(NewNode t, double left, double right ) {
         if(t.leftpoint>right)
         {
+            computecount++;
             return null;
         }
         ArrayList<HbaseIndexItem> listItem=new ArrayList<HbaseIndexItem>();

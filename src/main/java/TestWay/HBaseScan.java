@@ -1,11 +1,11 @@
-package hbasequery;
+package TestWay;
 
 import Item.HbaseIndexItem;
 import Item.QueryItem;
-import PCAM.ReadCSV;
+import hbasequery.HBaseUtils;
+import hbasequery.ResultAnswer;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
-import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
@@ -17,10 +17,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HbaseQuery {
+public class HBaseScan {
     public static void main(String[] args) throws IOException {
         //HBaseUtils.getInstance().queryDataUsingRowKey("cmop1000","0000000000","0000200000" );
-        queryDataFilter("cmop2000","1.","4." );
+        queryDataFilter(DynamicWay.tableName,"0.2","0.4" );
     }
 
 
@@ -39,12 +39,12 @@ public class HbaseQuery {
         {
             list.add(new QueryItem(new DecimalFormat(Decimalformat).format(i+i*200000),new DecimalFormat(Decimalformat).format(i+i*200000+200000)));
         }
-        HBaseUtils.getInstance().queryDataArrayListUsingRowKey("cmop2000",list);
+        HBaseUtils.getInstance().queryDataArrayListUsingRowKey("cmop1000",list);
         Long endtime=System.currentTimeMillis();
         System.out.println("总共耗时 : "+(endtime-starttime));
     }
 
-    public static  ArrayList<ResultAnswer> queryPartDataScanList(String tablename,List<HbaseIndexItem> listHbaseIndexItem) {
+    public static void queryDataScanList(String tablename,ArrayList<HbaseIndexItem> listHbaseIndexItem) {
         Configuration conf= HBaseConfiguration.create();
         Connection con=null;
         try {
@@ -70,7 +70,6 @@ public class HbaseQuery {
             System.out.println("向HBase查询时间"+(endTime-startTime));
             // double max=0;
             //   double min=Double.MAX_VALUE;
-            return listResult;
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }finally{
@@ -82,47 +81,8 @@ public class HbaseQuery {
             }
 
         }
-        return  null;
     }
 
-    public static void queryDataScanList(String tablename,ArrayList<HbaseIndexItem> listHbaseIndexItem) {
-        Configuration conf= HBaseConfiguration.create();
-        Connection con=null;
-        try {
-            con = ConnectionFactory.createConnection(conf);
-            //Admin admin=con.getAdmin();
-            TableName hbasetablename = TableName.valueOf(tablename);
-            Table querytable = con.getTable(hbasetablename);
-            ResultScanner rs = null;
-            //Filter filter = new RowFilter(CompareFilter.CompareOp.EQUAL,new RegexStringComparator(".*"));
-            //  scan.setFilter(filter);
-            Scan scan = new Scan();
-            ArrayList<ResultAnswer> listResult=new ArrayList<>();
-            System.out.println("tableName : "+tablename);
-            Long startTime=System.currentTimeMillis();
-            System.out.println();
-            for(int i=0;i<listHbaseIndexItem.size();i++)
-            {
-                // System.out.println("count"+i);
-                listResult.addAll(getListResult(scan,querytable, listHbaseIndexItem.get(i)));
-            }
-            querytable.close();
-            Long endTime=System.currentTimeMillis();
-            System.out.println("向HBase查询时间"+(endTime-startTime));
-            // double max=0;
-            //   double min=Double.MAX_VALUE;
-        }catch (Exception e) {
-            System.out.println(e.getMessage());
-        }finally{
-            try {
-                con.close();
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-        }
-    }
 
     public static void queryDataFilter(String tablename,String startKey,String endKey) {
         Configuration conf= HBaseConfiguration.create();
@@ -177,7 +137,7 @@ public class HbaseQuery {
                 }
             }
             Long endTime=System.currentTimeMillis();
-            return ;
+            System.out.println("向HBase查询时间"+(endTime-startTime));
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }finally{

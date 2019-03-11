@@ -24,6 +24,7 @@ public class ErrorRate {
             {
                 if(Overlap(list.get(i),leftpoint,rightpoint))
                 {
+                    System.out.println("命中: "+list.get(i).getStart()+" "+list.get(i).getEnd());
                     count++;
                     length+=list.get(i).getLength();
                     listResult.add(list.get(i));

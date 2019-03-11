@@ -1,4 +1,4 @@
-package segmenttree.optimizedalgorithm;
+package TestWay;
 
 import PCAM.ReadCSV;
 
@@ -6,19 +6,20 @@ import java.util.ArrayList;
 
 public class TestDataDistribution {
     public static void main(String[] args) {
-        ArrayList<String> arrTemperature= ReadCSV.readCsv("D:\\DataProject\\DataGenerate\\1000Wtemperature.csv");
+        ArrayList<String> arrTemperature= ReadCSV.readCsv("D:\\DataProject\\DataGenerate\\salinity\\3000Wsalinity.csv");
         double[] v1=new double[arrTemperature.size()];
         for(int i=0;i<arrTemperature.size();i++)
         {
             v1[i]=Double.parseDouble(arrTemperature.get(i));
         }
         int count =0;
-        double leftpoint=-3.15;
-        double rightpoint=-2.4;
+        double leftpoint=31.8;
+        double rightpoint=32;
         for(int i=0;i<v1.length;i++)
         {
             if(v1[i]> leftpoint&&v1[i]< rightpoint)
             {
+                System.out.println("Num "+i+"Value "+v1[i]);
                 count++;
             }
         }
@@ -43,7 +44,5 @@ public class TestDataDistribution {
         }
         //System.out.println(count);
         return count;
-
-
     }
 }

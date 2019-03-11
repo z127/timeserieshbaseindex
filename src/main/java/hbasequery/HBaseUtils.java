@@ -280,6 +280,64 @@ public class HBaseUtils {
         }
     }
 
+
+    public static void queryDataArrayListUsing(String tablename, ArrayList<QueryItem> queryItems) throws IOException {
+        Configuration conf= HBaseConfiguration.create();
+        Connection con=null;
+        try {
+            con = ConnectionFactory.createConnection(conf);
+            //Admin admin=con.getAdmin();
+            TableName hbasetablename = TableName.valueOf(tablename);
+            Table querytable = con.getTable(hbasetablename);
+            ResultScanner rs = null;
+            Scan scan = new Scan();
+            for(int i=0;i<queryItems.size();i++) {
+                String startrowkey=queryItems.get(i).getStartKey();
+                String endrowkey=queryItems.get(i).getEndKey();
+                scan.setStartRow(Bytes.toBytes(startrowkey));
+                scan.setStopRow(Bytes.toBytes(endrowkey));
+                // Filter filter = new RowFilter(CompareFilter.CompareOp.EQUAL, new RegexStringComparator(".*"));
+                //  scan.setFilter(filter);
+                rs = querytable.getScanner(scan);
+                System.out.println("tableName : " + tablename);
+                System.out.println("Data : ");
+                // double max=0;
+                //   double min=Double.MAX_VALUE;
+                System.out.println(" i "+i);
+                System.out.println("startKey"+ Bytes.toString(scan.getStartRow()));
+                System.out.println("endKey"+ Bytes.toString(scan.getStartRow()));
+                for (Result r : rs) {
+                    Cell[] cellArr = r.rawCells();
+                    for (Cell cell : cellArr) {
+                        //rowArray
+                        byte[] rowArr = cell.getRowArray();
+                        //获取列族
+                        String family = new String(cell.getFamilyArray(), cell.getFamilyOffset(), cell.getFamilyLength());
+                        // System.out.println(cell.getTimestamp()+"  "+new String(cell.getValue(),"utf-8"));  //都转换为utf-8，中文会乱码
+                        //获取rowkey
+                        String row = Bytes.toString(cell.getRowArray(), cell.getRowOffset(), cell.getRowLength());
+                        //获取列名
+                        String column = Bytes.toString(cell.getQualifierArray(), cell.getQualifierOffset(), cell.getQualifierLength());
+                        String value = Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength());
+                        System.out.println("count "+i +" row :" + row + " family :" + family + " column :" + column + " value : " + value);
+                        // return;
+                  /*
+                   max=Double.parseDouble(value)>max?Double.parseDouble(value):max;
+                    min=Double.parseDouble(value)<min?Double.parseDouble(value):min;
+                    System.out.println("max"+max);
+                    System.out.println("min"+min);*/
+                        // System.out.println(new String(rowArr));
+                    }
+                }
+            }
+            rs.close();
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }finally{
+            con.close();
+        }
+    }
+
     public static void queryDataArrayListUsingRowKeyBatch(String tablename, ArrayList<QueryItem> queryItems) throws IOException {
         Configuration conf= HBaseConfiguration.create();
         List<Scan> batch = new ArrayList<Scan>();
@@ -354,6 +412,23 @@ public class HBaseUtils {
 
 
     public static void dropTable(String tableName) {
+        try {
+            Configuration conf= HBaseConfiguration.create();
+            HBaseAdmin admin = new HBaseAdmin(conf);
+            admin.disableTable(tableName);
+            admin.deleteTable(tableName);
+        } catch (MasterNotRunningException e) {
+            e.printStackTrace();
+        } catch (ZooKeeperConnectionException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public static void truncateTable(String tableName) {
         try {
             Configuration conf= HBaseConfiguration.create();
             HBaseAdmin admin = new HBaseAdmin(conf);
